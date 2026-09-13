@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo of Automatic Synthesis Audio and Music Theory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .quiz-description {
+            text-align: left;
+            font-size: 16px; /* 字体放大，更醒目 */
+            color: #34495e;
+            margin-bottom: 60px; /* 大幅增加与题目的间距，留出空白 */
+            line-height: 1.5;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chain-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 60px; /* 居中 + 底部间距 */
+        }
+        .image-caption {
+            text-align: center;
+            font-size: 16px;
+            color: #34495e;
+            margin: -40px auto 60px; /* 紧贴图片 + 底部间距 */
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        .question-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .question-header {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .task-tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            color: #2c3e50;
+        }
+        .audio-button {
+            padding: 10px 20px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .audio-button:hover {
+            background: #27ae60;
+        }
+        .option {
+            padding: 10px 15px;
+            margin: 8px 0;
+            background: #ecf0f1;
+            border-radius: 6px;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 12px 15px;
+            background: #fff3cd;
+            border-radius: 6px;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">Test demonstration for HY-MAST</h1>
+        <p class="quiz-description">
+            Cases For Fundamental Perception and Theoretical Knowledge Evaluation.
+            Below are whole 11 task categories of fundamental perception, as well as the theoretical knowledge task, each category presents 2 items.
+            All the music content and questions are generated based on the random seed "0".
+            This random seed enables question reproduction. Identical seed values produce consistent music and questions, ensuring benchmark fairness and reproducible LLM evaluation outcomes.
+            <br>
+            <br> <b>Open Source</b>
+            <br>
+            The folder <b>online_sys_music_files</b> stores the audio files required by this page.
+            The folder <b>Code_Fragments</b> provides partial code snippets.
+            Should this paper be accepted for publication, all additional resources will be released, such as real-music items.
+            Thank you for your time and attention.
+            <br>
+            <br> <b>Online Automatic synthesis</b>
+            <br>
+            For multimodal LLM evaluation framework, HY-MAST provides audio, symbolic sheet, and theory articles.
+            Audio music is derived from two sources: automatically synthesized standard music samples and authentic human-composed works.
+            Due to the lack of a well-structured music synthesis system in previous works, HY-MAST incorporates a complete set of tools for on-line synthesis of standard samples.
+            Guided by the rigorous norms of musicological theory, it can automatically synthesize accurate standard music samples (No AI) in accordance with specified instructions.
+            Synthesized files are provided in WAV, MIDI, ABC and XML formats, which can be applied to LLM benchmark construction, music generation samples, and art examinations.
+            <br>
+            Automatic fundamental perception questions generation tools:
+            <br>
+            Code_Fragments/Auto_Benchmark_Test_for_LLM_main.py
+            <br>
+            Automatic synthesis tools:
+            <br>
+            Code_Fragments/Algorithm_for_Music_Synthesize.py
+
+            <br>
+            <br> <b>AI Melody Generation and Automatic Audio Rendering</b>
+            <br>
+            For the questions of Melody Transcription and Time Signature Recognition tasks, the target melody to be recognized is generated by an LM.
+            The LM model first produces content in ABC notation, which is then automatically converted to MIDI and rendered into WAV format by fluidsynth, before being finally supplied to the question system.
+            The pipeline for LM-generated melodies is also controlled by the random seed to ensure reproducibility.
+            <br>
+            Batch generated abc to wav tools:
+            <br>
+            Code_Fragments/lm_gen_abc_to_audio.py
+            <br>
+            <br> <b>Three-dimensional random chain</b>
+            <br>
+            To ensure that the benchmark system can be controlled by the user-specified random seed, we have also developed a comprehensive set of random selection and random number generation tools.
+            We adopt the <b>"Three-dimensional random chain"</b> method to generate a local random number matrix for all sub-questions, thereby constraining the content of each sub-question and the generation process of its associated music.
+            The usage of this function is as follows:
+            <br>
+            seeds_chain_dict, Seed_Chain_Matrix = pseudorandom_tools.generate_3d_random_chain(input_seed, [number_of_questions_type, number_of_each_questions, num_process])
+            <br>
+            Here, the matrix **Seed_Chain_Matrix** represents the local random number for the k-th category, l-th sub-question, and p-th process (batch). Given an input seed (e.g., 0), the random number at the specific position remains fixed regardless of how the total number of categories, sub-questions, and processes changes, as shown in the figure:
+        </p>
+
+        <img src="Three-dimensional random chain.png" class="chain-image" alt="Three-dimensional random chain">
+
+        <p class="image-caption">As shown in the figure, although the scale of the Benchmark varies, the local random number for the 1-th category, 1st sub-question, and 2nd process (batch) remains the same when the input seed 0 is a fixed value — it is the integer 112.</p>
+
+        <div id="quiz"></div>
+    </div>
+
+<script>
+const questions = [
+{"id": "Pitch Identification_synthetic_audio_0", "local_seed": 964, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a single note. Which of the following is the correct note name?", "task": "Pitch Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "B4", "B": "G#4", "C": "C5", "D": "A3"}, "answer": "D", "audio_path": "online_sys_music_files/note_A4_to_A3_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Pitch Identification_synthetic_audio_1", "local_seed": 896, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a single note. Which of the following is the correct note name?", "task": "Pitch Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "Db4", "B": "Db5", "C": "A#3", "D": "C4"}, "answer": "B", "audio_path": "online_sys_music_files/note_A4_to_Db5_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Interval Identification_synthetic_audio_0", "local_seed": 189, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a harmonic interval (two notes played simultaneously). Which of the following is the correct interval name?", "task": "Interval Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "Major Second", "B": "Augmented Fourth", "C": "Perfect Fifth", "D": "Minor Second"}, "answer": "D", "audio_path": "online_sys_music_files/interval_B3_and_C4_Minor_Second_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Interval Identification_synthetic_audio_1", "local_seed": 833, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a harmonic interval (two notes played simultaneously). Which of the following is the correct interval name?", "task": "Interval Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "Major Second", "B": "Minor Second", "C": "Perfect Octave", "D": "Major Third"}, "answer": "C", "audio_path": "online_sys_music_files/interval_B3_and_B4_Perfect_Octave_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Interval Identification_synthetic_score_0", "local_seed": 653, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct interval name?\n[^F^d]4 |]", "task": "Interval Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "Major Seventh", "B": "Perfect Fourth", "C": "Diminished Fifth", "D": "Major Sixth"}, "answer": "D", "audio_path": null, "score_path": "online_sys_music_files/interval_Fsharp4_and_Dsharp5_Major_Sixth_bpm_60.abc", "seed": 0},
+{"id": "Interval Identification_synthetic_score_1", "local_seed": 538, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct interval name?\n[^A^^c]4 |]", "task": "Interval Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "Major Seventh", "B": "Minor Sixth", "C": "Major Third", "D": "Minor Third"}, "answer": "C", "audio_path": null, "score_path": "online_sys_music_files/auto_synthesize_music_PrimarySeed_0_ProcessIdx_0/interval/interval_A#4_and_C##5_Major Third_bpm_60.abc", "seed": 0},
+{"id": "Chord Identification_synthetic_audio_0", "local_seed": 951, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a chord. Which of the following is the correct chord name and inversion?", "task": "Chord Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "C#6 in root position", "B": "D#7 in third inversion", "C": "D#add2 in third inversion", "D": "Dm6 in second inversion"}, "answer": "B", "audio_path": "online_sys_music_files/chord_Dsharp_7_third_inversion_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Chord Identification_synthetic_audio_1", "local_seed": 132, "question": "After listening to the reference pitch A4 (440 Hz), you will hear a chord. Which of the following is the correct chord name and inversion?", "task": "Chord Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "EbmM7 in first inversion", "B": "Bbaug in root position", "C": "Ebm6 in third inversion", "D": "AmM7 in third inversion"}, "answer": "D", "audio_path": "online_sys_music_files/chord_A_mM7_third_inversion_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Chord Identification_synthetic_score_0", "local_seed": 367, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct chord name and inversion?\n[^A,^D^E]4 |]", "task": "Chord Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "A#sus4 in root position", "B": "G6 in third inversion", "C": "Fmajor in first inversion", "D": "A#m7 in first inversion"}, "answer": "A", "audio_path": null, "score_path": "online_sys_music_files/auto_synthesize_music_PrimarySeed_0_ProcessIdx_0/chord/chord_A#_sus4_root position_bpm_60.abc", "seed": 0},
+{"id": "Chord Identification_synthetic_score_1", "local_seed": 439, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct chord name and inversion?\n[_E,_G,_B,_D]4 |]", "task": "Chord Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "Ebdim7 in second inversion", "B": "Dbadd9 in third inversion", "C": "Dmaj7 in second inversion", "D": "Ebm7 in root position"}, "answer": "D", "audio_path": null, "score_path": "online_sys_music_files/auto_synthesize_music_PrimarySeed_0_ProcessIdx_0/chord/chord_Eb_m7_root position_bpm_60.abc", "seed": 0},
+{"id": "Tonality Identification_synthetic_audio_0", "local_seed": 412, "question": "After listening to the reference pitch A4 (440 Hz), you will hear an ascending and descending octave scale. Which of the following is the correct tonic and mode?", "task": "Tonality Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "Db locrian", "B": "A# phrygian", "C": "G# chromatic", "D": "G# dorian"}, "answer": "C", "audio_path": "online_sys_music_files/scale_Gsharp_chromatic_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Tonality Identification_synthetic_audio_1", "local_seed": 986, "question": "After listening to the reference pitch A4 (440 Hz), you will hear an ascending and descending octave scale. Which of the following is the correct tonic and mode?", "task": "Tonality Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "B dorian", "B": "Ab whole tone", "C": "C lydian", "D": "G# harmonic major"}, "answer": "A", "audio_path": "online_sys_music_files/scale_B_dorian_bpm_60.mp3", "score_path": null, "seed": 0},
+{"id": "Tonality Identification_synthetic_score_0", "local_seed": 804, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct mode?\nC2 D2 _E2 F2 | G2 A2 _B2 c2 | c2 _B2 A2 G2 | F2 _E2 D2 C2 |]", "task": "Tonality Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "melodic minor", "B": "natural minor", "C": "whole tone", "D": "dorian"}, "answer": "D", "audio_path": null, "score_path": "online_sys_music_files/auto_synthesize_music_PrimarySeed_0_ProcessIdx_0/scale/scale_C_dorian_bpm_60.abc", "seed": 0},
+{"id": "Tonality Identification_synthetic_score_1", "local_seed": 388, "question": "Examine the following musical excerpt written in ABC notation and select the correct answer. Which of the following is the correct mode?\nC2 _D2 _E2 F2 | G2 _A2 _B2 c2 | c2 _B2 _A2 G2 | F2 _E2 _D2 C2 |]", "task": "Tonality Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "whole tone", "B": "lydian", "C": "phrygian", "D": "natural minor"}, "answer": "C", "audio_path": null, "score_path": "online_sys_music_files/auto_synthesize_music_PrimarySeed_0_ProcessIdx_0/scale/scale_C_phrygian_bpm_60.abc", "seed": 0},
+{"id": "Rhythm Transcription_synthetic_audio_0", "local_seed": 347, "question": "After a reference metronome click at 90 BPM, you will hear a two-bar rhythm in 6/8 time. Which of the following is the correct rhythmic pattern?\n*(In the notation below, each `x` represents a sixteenth note. A number after `x` is a duration multiplier, e.g., `x` 2=eighth note. `(3` starts a triplet.)*", "task": "Rhythm Transcription", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "xx2xx2 xxxxxx | x2xxxx x2x3x |]", "B": "xx3xx x2x3x | xx4x xx3xx |]", "C": "xx2x2x x2xxxx | x4x2 x2xxx2 |]", "D": "x4xx xxxxx2 | x2x2xx xx4x |]"}, "answer": "C", "audio_path": "online_sys_music_files/rhythm_xx2x2x_x2xxxx_x4x2_x2xxx2_bpm_90_ts_68.mp3", "score_path": null, "seed": 0},
+{"id": "Rhythm Transcription_synthetic_audio_1", "local_seed": 627, "question": "After a reference metronome click at 90 BPM, you will hear a two-bar rhythm in 4/4 time. Which of the following is the correct rhythmic pattern?\n*(In the notation below, each `x` represents a sixteenth note. A number after `x` is a duration multiplier, e.g., `x` 2=eighth note. `(3` starts a triplet.)*", "task": "Rhythm Transcription", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "xx2x (3x2x2x2 x4 xxxx | x2xx x2x2 xxx2 xx3 |]", "B": "x2x2 (3x2x2x2 x4 x2xx | xxxx x3x xx2x xxx2 |]", "C": "x2x2 x2xx x3x x4 | xx2x xx3 xxx2 (3x2x2x2 |]", "D": "xxxx x3x x2x2 xx3 | x2xx (3x2x2x2 xxx2 xx2x |]"}, "answer": "C", "audio_path": "online_sys_music_files/rhythm_x2x2_x2xx_x3x_x4_xx2x_xx3_xxx2_(3x2x2x2_bpm_90_ts_44.mp3", "score_path": null, "seed": 0},
+{"id": "Meter Identification_synthetic_audio_0", "local_seed": 521, "question": "You will hear a 22-bar melody, Which of the following is the correct time signature?", "task": "Meter Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "4/4", "B": "3/4", "C": "3/8", "D": "2/4"}, "answer": "D", "audio_path": "online_sys_music_files/gen_melody_ts24_gentime_1776936602080_bpm120.mp3", "score_path": null, "seed": 0},
+{"id": "Meter Identification_synthetic_audio_1", "local_seed": 669, "question": "You will hear a 24-bar melody, Which of the following is the correct time signature?", "task": "Meter Identification", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "6/8", "B": "4/4", "C": "3/8", "D": "2/4"}, "answer": "B", "audio_path": "online_sys_music_files/gen_melody_ts44_gentime_1776936613605_bpm144.mp3", "score_path": null, "seed": 0},
+{"id": "Meter Identification_synthetic_score_0", "local_seed": 681, "question": "Examine the following music score in ABC notation and select the correct answer. Which of the following is the correct time signature?\nX:1\nL:1/8\nQ:1/4=120\nK:G\nBBc BBA Bcd BBA BBA B>BB B/A/GA/A/ AGF G>GG c/c/c/c/c d/d/d/d/d g2 d g3/2g/f e/e/e z e f2 e/e/d/d/c/c d/d/d/d/d g3 d3 d>cB d3 G2 z", "task": "Meter Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "3/4", "B": "2/4", "C": "4/4", "D": "3/8"}, "answer": "D", "audio_path": null, "score_path": null, "seed": 0},
+{"id": "Meter Identification_synthetic_score_1", "local_seed": 534, "question": "Examine the following music score in ABC notation and select the correct answer. Which of the following is the correct time signature?\nX:1\nL:1/8\nQ:1/4=120\nK:F\nFAF cAF GA/c/B/G/ FFF GBB cAF G2 z GAB cAF Ac/B/A/G/ F2 z", "task": "Meter Identification", "modality": "score", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "3/4", "B": "3/8", "C": "6/8", "D": "2/4"}, "answer": "B", "audio_path": null, "score_path": null, "seed": 0},
+{"id": "Melody Transcription_synthetic_audio_0", "local_seed": 458, "question": "After a reference metronome click at 90 BPM, you will hear a 15-bar melody in 2/4 time. Which of the following is the correct ABC notation for bar 10 of the melody?", "task": "Melody Transcription", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 0, "options": {"A": "eA A2", "B": "fe B2", "C": "ed d2", "D": "f>e fa"}, "answer": "A", "audio_path": "online_sys_music_files/gen_melody_ts24_gentime_1776936633796_bpm90.mp3", "score_path": null, "seed": 0},
+{"id": "Melody Transcription_synthetic_audio_1", "local_seed": 319, "question": "After a reference metronome click at 40 BPM, you will hear a 8-bar melody in 3/4 time. Which of the following is the correct ABC notation for bar 1 of the melody?", "task": "Melody Transcription", "modality": "audio", "source": "Algorithm_for_Music_Synthesize.py", "task_idx": 1, "options": {"A": "ECDECD", "B": "D6", "C": "EF F2 F2", "D": "G2 EDCD"}, "answer": "D", "audio_path": "online_sys_music_files/gen_melody_ts34_gentime_1776936644605_bpm40.mp3", "score_path": null, "seed": 0},
+{"id": "Music Theory Concepts_0_0", "local_seed": 771, "question": "In a minor-key sonata exposition, the secondary theme (S) establishes a cadence in the mediant (III). When the recapitulation arrives, in which key must S now cadence, and what structural element of the exposition must be recomposed to accommodate this change?", "task": "Music Theory Concepts", "modality": "text", "source": "https://viva.pressbooks.pub/openmusictheorycopy", "task_idx": 0, "options": {"A": "S must cadence in the mediant (III) again, and only the closing section needs to be recomposed to resolve the tonal conflict.", "B": "S must cadence in the tonic (i), and the transition must be recomposed to prepare that key instead of the mediant.", "C": "S must cadence in the dominant (v), and the primary theme must be recomposed to establish the new tonal goal.", "D": "S must cadence in the subdominant (iv), and the closing section must be transposed to match the new tonal center."}, "answer": "B", "audio_path": null, "score_path": null, "seed": 0},
+{"id": "Music Theory Concepts_0_1", "local_seed": 109, "question": "In third-species counterpoint, beats 1 and 4 in the counterpoint both carry the pitch C, while beats 2 and 3 carry D and B respectively (or B and D respectively), all dissonant with the cantus. This figure is permitted under which condition?", "task": "Music Theory Concepts", "modality": "text", "source": "https://viva.pressbooks.pub/openmusictheorycopy", "task_idx": 1, "options": {"A": "Beat 2 must be consonant with the cantus so that only one of the two inner notes is dissonant", "B": "Beats 2 and 3 must each be approached and left by contrary motion relative to the cantus", "C": "The motion from beat 3 into beat 4 and from beat 4 into the next downbeat must both be stepwise and in the same direction", "D": "The figure must appear only on beats 1 through 4 of the first measure to introduce variety early"}, "answer": "C", "audio_path": null, "score_path": null, "seed": 0}
+];
+
+const quizContainer = document.getElementById('quiz');
+let html = '';
+let audioIndex = 0;
+
+questions.forEach((q, index) => {
+    html += `<div class="question-card">`;
+    html += `<div class="question-header">Question ${index + 1} | ID: ${q.id}</div>`;
+    html += `<div class="task-tag">${q.task}</div>`;
+    html += `<div class="question-text">${q.question}</div>`;
+
+    if (q.audio_path) {
+        html += `
+            <audio id="audio_${audioIndex}" src="${q.audio_path}"></audio>
+            <button class="audio-button" data-audio="${audioIndex}">Play Audio</button>
+        `;
+        audioIndex++;
+    }
+
+    html += `<div>`;
+    for (const [key, value] of Object.entries(q.options)) {
+        html += `<div class="option"><strong>${key}.</strong> ${value}</div>`;
+    }
+    html += `</div>`;
+
+    html += `<div class="answer">Correct Answer: ${q.answer}</div>`;
+    html += `</div>`;
+});
+
+quizContainer.innerHTML = html;
+
+document.querySelectorAll('.audio-button').forEach(btn => {
+    const idx = btn.getAttribute('data-audio');
+    const audio = document.getElementById(`audio_${idx}`);
+
+    btn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            btn.textContent = 'Pause';
+        } else {
+            audio.pause();
+            btn.textContent = 'Play Audio';
+        }
+    });
+});
+</script>
+</body>
+</html>
