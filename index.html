@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo of Automatic Synthesis Audio and Music Theory</title>
+    <title>HY-MAST Supplementary | Demo of Automatic Synthesis Audio and Music Theory</title>
+    <meta name="description" content="Supplementary material for HY-MAST: benchmark construction, evaluation protocol, complete radar values, and audio and music theory demonstrations.">
+    <meta name="author" content="yizou, shangdawu, liliangtang, teddysun, Qin Zhang, ye long, steveyves, linus">
     <style>
         * {
             margin: 0;
@@ -103,68 +105,417 @@
             font-weight: bold;
             color: #856404;
         }
+        html {
+            scroll-behavior: smooth;
+        }
+        a {
+            color: #216a9a;
+            text-underline-offset: 3px;
+            overflow-wrap: anywhere;
+        }
+        a:hover {
+            color: #16496b;
+        }
+        a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+            outline: 3px solid #3498db;
+            outline-offset: 4px;
+        }
+        .paper-header {
+            text-align: center;
+            color: #2c3e50;
+            margin: 15px auto 32px;
+            max-width: 900px;
+        }
+        .paper-eyebrow {
+            color: #216a9a;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+        .paper-header h1 {
+            font-size: clamp(26px, 4vw, 38px);
+            line-height: 1.25;
+            margin-bottom: 22px;
+        }
+        .paper-authors {
+            line-height: 1.9;
+            margin-bottom: 15px;
+        }
+        .paper-affiliations {
+            list-style: none;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #526477;
+        }
+        .section-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+        }
+        .section-nav a {
+            padding: 9px 14px;
+            background: #e8eef5;
+            border-radius: 6px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .supplement-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 28px;
+            margin-bottom: 28px;
+            color: #34495e;
+            line-height: 1.7;
+        }
+        .supplement-section h2, .demo-section h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            line-height: 1.35;
+            margin-bottom: 20px;
+        }
+        .supplement-section h3 {
+            font-size: 19px;
+            color: #2c3e50;
+            margin: 26px 0 12px;
+        }
+        .supplement-section h4 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin: 20px 0 10px;
+        }
+        .supplement-section p {
+            margin-bottom: 14px;
+        }
+        .supplement-section ul, .supplement-section ol {
+            padding-left: 24px;
+            margin: 12px 0 18px;
+        }
+        .supplement-section li {
+            margin-bottom: 10px;
+        }
+        [id] {
+            scroll-margin-top: 24px;
+        }
+        .example-figure {
+            margin: 0 auto 35px;
+            max-width: 720px;
+        }
+        .example-figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .example-figure figcaption, .chain-figure figcaption {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #526477;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .figure-link {
+            display: block;
+        }
+        .prompt-box {
+            border-left: 4px solid #3498db;
+            border-radius: 0 6px 6px 0;
+            background: #f0f6fc;
+            padding: 18px 20px;
+            margin: 18px 0;
+            font-style: italic;
+        }
+        code, pre {
+            font-family: Menlo, Consolas, monospace;
+            font-size: 13px;
+        }
+        code {
+            overflow-wrap: anywhere;
+        }
+        .seed-code {
+            background: #f5f7fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        .seed-code code {
+            overflow-wrap: normal;
+        }
+        .chain-figure {
+            margin-top: 22px;
+        }
+        .chain-figure .chain-image {
+            margin: 0 auto;
+        }
+        .chain-figure .image-caption {
+            margin: 16px auto 0;
+        }
+        .table-scroll {
+            overflow-x: auto;
+            margin: 22px 0 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .results-table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            font-size: 14px;
+            font-variant-numeric: tabular-nums;
+        }
+        .results-table.real-world-table {
+            min-width: 640px;
+        }
+        .results-table caption {
+            text-align: left;
+            padding: 16px;
+            background: #f0f6fc;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .results-table th, .results-table td {
+            padding: 11px 12px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        .results-table thead th {
+            background: #e8eef5;
+            color: #2c3e50;
+        }
+        .results-table th:first-child {
+            text-align: left;
+        }
+        .results-table tbody th {
+            font-weight: normal;
+        }
+        .results-table tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        .results-table tbody tr:last-child > * {
+            border-bottom: none;
+        }
+        .references-list {
+            font-size: 14px;
+        }
+        .references-list li::marker {
+            color: #216a9a;
+            font-weight: bold;
+        }
+        .demo-section {
+            margin-top: 40px;
+        }
+        .demo-section .quiz-description {
+            margin-bottom: 28px;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 12px;
+            }
+            .supplement-section {
+                padding: 20px 16px;
+            }
+            .section-nav {
+                gap: 8px;
+            }
+            .section-nav a {
+                padding: 8px 10px;
+            }
+            .question-header, .question-text, .option {
+                overflow-wrap: anywhere;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="page-title">Test demonstration for HY-MAST</h1>
-        <p class="quiz-description">
-            Cases For Fundamental Perception and Theoretical Knowledge Evaluation.
-            Below are whole 11 task categories of fundamental perception, as well as the theoretical knowledge task, each category presents 2 items.
-            All the music content and questions are generated based on the random seed "0".
-            This random seed enables question reproduction. Identical seed values produce consistent music and questions, ensuring benchmark fairness and reproducible LLM evaluation outcomes.
-            <br>
-            <br> <b>Open Source</b>
-            <br>
-            The folder <b>online_sys_music_files</b> stores the audio files required by this page.
-            The folder <b>Code_Fragments</b> provides partial code snippets.
-            Should this paper be accepted for publication, all additional resources will be released, such as real-music items.
-            Thank you for your time and attention.
-            <br>
-            <br> <b>Online Automatic synthesis</b>
-            <br>
-            For multimodal LLM evaluation framework, HY-MAST provides audio, symbolic sheet, and theory articles.
-            Audio music is derived from two sources: automatically synthesized standard music samples and authentic human-composed works.
-            Due to the lack of a well-structured music synthesis system in previous works, HY-MAST incorporates a complete set of tools for on-line synthesis of standard samples.
-            Guided by the rigorous norms of musicological theory, it can automatically synthesize accurate standard music samples (No AI) in accordance with specified instructions.
-            Synthesized files are provided in WAV, MIDI, ABC and XML formats, which can be applied to LLM benchmark construction, music generation samples, and art examinations.
-            <br>
-            Automatic fundamental perception questions generation tools:
-            <br>
-            Code_Fragments/Auto_Benchmark_Test_for_LLM_main.py
-            <br>
-            Automatic synthesis tools:
-            <br>
-            Code_Fragments/Algorithm_for_Music_Synthesize.py
+    <main class="container">
+        <header class="paper-header">
+            <p class="paper-eyebrow">Supplementary Material for</p>
+            <h1>HY-MAST: Probing the Fragile Foundations of Music Understanding in Multimodal LLMs</h1>
+            <p class="paper-authors">yizou<sup>1,2</sup>, shangdawu<sup>2</sup>, liliangtang<sup>2</sup>, teddysun<sup>2</sup>, Qin Zhang<sup>3</sup>, ye long<sup>4</sup>, steveyves<sup>2</sup>, linus<sup>2</sup></p>
+            <ul class="paper-affiliations">
+                <li><sup>1</sup> School of Information and Communication Engineering, Communication University of China</li>
+                <li><sup>2</sup> Hunyuan, Tencent</li>
+                <li><sup>3</sup> State Key Laboratory of Media Convergence and Communication, Communication University of China</li>
+                <li><sup>4</sup> School of Data Science and Intelligent Media, Communication University of China</li>
+            </ul>
+        </header>
 
-            <br>
-            <br> <b>AI Melody Generation and Automatic Audio Rendering</b>
-            <br>
-            For the questions of Melody Transcription and Time Signature Recognition tasks, the target melody to be recognized is generated by an LM.
-            The LM model first produces content in ABC notation, which is then automatically converted to MIDI and rendered into WAV format by fluidsynth, before being finally supplied to the question system.
-            The pipeline for LM-generated melodies is also controlled by the random seed to ensure reproducibility.
-            <br>
-            Batch generated abc to wav tools:
-            <br>
-            Code_Fragments/lm_gen_abc_to_audio.py
-            <br>
-            <br> <b>Three-dimensional random chain</b>
-            <br>
-            To ensure that the benchmark system can be controlled by the user-specified random seed, we have also developed a comprehensive set of random selection and random number generation tools.
-            We adopt the <b>"Three-dimensional random chain"</b> method to generate a local random number matrix for all sub-questions, thereby constraining the content of each sub-question and the generation process of its associated music.
-            The usage of this function is as follows:
-            <br>
-            seeds_chain_dict, Seed_Chain_Matrix = pseudorandom_tools.generate_3d_random_chain(input_seed, [number_of_questions_type, number_of_each_questions, num_process])
-            <br>
-            Here, the matrix **Seed_Chain_Matrix** represents the local random number for the k-th category, l-th sub-question, and p-th process (batch). Given an input seed (e.g., 0), the random number at the specific position remains fixed regardless of how the total number of categories, sub-questions, and processes changes, as shown in the figure:
-        </p>
+        <nav class="section-nav" aria-label="Page sections">
+            <a href="#construction">Benchmark Construction</a>
+            <a href="#protocol">Evaluation Protocol</a>
+            <a href="#radar-values">Complete Radar Values</a>
+            <a href="#open-source">Open Source</a>
+            <a href="#demo">Audio &amp; Question Demo</a>
+            <a href="#references">References</a>
+        </nav>
 
-        <img src="Three-dimensional random chain.png" class="chain-image" alt="Three-dimensional random chain">
+        <figure id="fig-examples" class="example-figure">
+            <a class="figure-link" href="demo.pdf" aria-label="Open the original example-question figure as a PDF">
+                <img src="assets/supplementary-examples.png" width="2042" height="2229" alt="Three assessment examples: real-world chord progression analysis with Hey Jude (audio, answer A), chord identification from ABC notation (score, answer B), and dotted-note duration equivalence (text, answer C).">
+            </a>
+            <figcaption><strong>Figure S1.</strong> Original example questions illustrating the three assessment components: real-world music analysis, fundamental perception, and theoretical knowledge. <a href="demo.pdf">View original PDF</a>.</figcaption>
+        </figure>
 
-        <p class="image-caption">As shown in the figure, although the scale of the Benchmark varies, the local random number for the 1-th category, 1st sub-question, and 2nd process (batch) remains the same when the input seed 0 is a fixed value — it is the integer 112.</p>
+        <section id="construction" class="supplement-section" aria-labelledby="construction-title">
+            <h2 id="construction-title">S1. Benchmark Construction Details</h2>
+            <p>This supplement preserves the extended motivation, benchmark construction, and evaluation condensed in the ICASSP 2027 main paper. References are numbered independently in the main paper and this supplement. Supplementary section, figure, and table numbers carry the prefix S.</p>
+            <p>For multimodal LLM evaluation framework, HY-MAST provides audio, symbolic sheet, and theory articles. Audio music is derived from two sources: automatically synthesized standard music samples and authentic human-composed works.</p>
 
-        <div id="quiz"></div>
-    </div>
+            <h3 id="real-world-corpus">S1.1. Curated music corpus for Real-World music analysis</h3>
+            <p>This component assesses comprehensive understanding within real, complete, and complex works. Its tasks range from basic perception, such as tempo estimation, to integrated analysis, such as genre identification.</p>
+            <ul>
+                <li><strong>Popular music:</strong> The entire Billboard <em>Greatest of All Time Hot 100 Songs</em> chart is included. This historically aggregated chart provides the popular-music evaluation context. The original source is <a href="https://www.billboard.com/charts/greatest-hot-100-singles/">https://www.billboard.com/charts/greatest-hot-100-singles/</a>.</li>
+                <li><strong>Art music:</strong> We manually select 100 representative MusicNet works <a href="#ref-musicnet" aria-label="Reference 1">[1]</a>, considering genre, period, and composer, to assess complex musical structure.</li>
+                <li><strong>World music:</strong> We select 100 works from four regional collections associated with CompMusic <a href="#ref-compmusic" aria-label="Reference 2">[2]</a>: Arab-Andalusian music <a href="#ref-arab-andalusian" aria-label="Reference 3">[3]</a>, the Jingju a cappella singing dataset <a href="#ref-jingju" aria-label="Reference 4">[4]</a>, Indian Carnatic and Hindustani music in Saraga <a href="#ref-saraga" aria-label="Reference 5">[5]</a>, and Turkish şarkı vocal music <a href="#ref-turkish" aria-label="Reference 6">[6]</a>.</li>
+            </ul>
+
+            <h3 id="fundamental-generation">S1.2. Fundamental perception generation</h3>
+            <p>The synthetic component tests core competencies under controlled conditions. Synthetic items can be generated in effectively unlimited numbers through two complementary methods.</p>
+            <h4>Rule-based generation — Online Automatic synthesis</h4>
+            <p>Fragments target isolated musical elements: pitch in G3–G5, intervals within one octave, chords with at most four notes, rhythmic patterns, and scale-based tonality. A controlled, seed-driven pipeline generates each audio stimulus and corresponding ABC notation according to formal rules. Most pitch-related tasks present A4 before the target stimulus to mimic reference-based human testing conditions.</p>
+            <p>Due to the lack of a well-structured music synthesis system in previous works, HY-MAST incorporates a complete set of tools for on-line synthesis of standard samples. Guided by the rigorous norms of musicological theory, it can automatically synthesize accurate standard music samples (No AI) in accordance with specified instructions. Synthesized files are provided in WAV, MIDI, ABC and XML formats, which can be applied to LLM benchmark construction, music generation samples, and art examinations.</p>
+            <ul>
+                <li>Automatic fundamental perception questions generation tools: <a href="Code_Fragments/Auto_Benchmark_Test_for_LLM_main.py"><code>Code_Fragments/Auto_Benchmark_Test_for_LLM_main.py</code></a></li>
+                <li>Automatic synthesis tools: <a href="Code_Fragments/Algorithm_for_Music_Synthesize.py"><code>Code_Fragments/Algorithm_for_Music_Synthesize.py</code></a></li>
+            </ul>
+            <h4>Model-based generation — AI Melody Generation and Automatic Audio Rendering</h4>
+            <p>Meter identification and melody transcription require coherent melodic phrases; isolated rule-based fragments lack the natural flow needed for these tasks. For the questions of Melody Transcription and Time Signature Recognition tasks, the target melody to be recognized is generated by an LM. We train a lightweight Transformer decoder on the IrishMAN dataset <a href="#ref-tunesformer" aria-label="Reference 7">[7]</a> to generate plausible short monophonic melodies in ABC notation. This component therefore contains both isolated-element and phrase-level items, not only single notes or chords.</p>
+            <p>The LM model first produces content in ABC notation, which is then automatically converted to MIDI and rendered into WAV format by fluidsynth, before being finally supplied to the question system. The pipeline for LM-generated melodies is also controlled by the random seed to ensure reproducibility.</p>
+            <p>Batch generated abc to wav tools: <a href="Code_Fragments/lm_gen_abc_to_audio.py"><code>Code_Fragments/lm_gen_abc_to_audio.py</code></a></p>
+
+            <h3 id="theoretical-construction">S1.3. Theoretical knowledge construction</h3>
+            <p>This text-only examination contains 119 multiple-choice questions about formal music theory. Construction follows three stages:</p>
+            <ol>
+                <li>A domain expert identifies the core concepts and extracts explanatory text from Open Music Theory <a href="#ref-open-music-theory" aria-label="Reference 8">[8]</a>.</li>
+                <li>DeepSeek-R1 <a href="#ref-deepseek" aria-label="Reference 9">[9]</a> uses the concept–text pairs to generate question stems, correct answers, and plausible distractors.</li>
+                <li>The expert reviews and refines the entire set for correctness, clarity, and appropriateness.</li>
+            </ol>
+            <p>Distractors are prompted to mirror the grammatical structure and stylistic register of the correct answer while containing a definite factual error. This design seeks to reduce guessing from superficial language patterns and make theoretical knowledge necessary for identifying the correct statement.</p>
+        </section>
+
+        <section id="protocol" class="supplement-section" aria-labelledby="protocol-title">
+            <h2 id="protocol-title">S2. Evaluation Protocol</h2>
+            <h3 id="prompt-scoring">S2.1. Prompt and scoring</h3>
+            <p>All evaluations use zero-shot, four-option multiple choice. The standardized instruction prepended to every model is:</p>
+            <blockquote class="prompt-box">Please answer the following multiple-choice question. You must choose the correct option letter (A, B, C, or D) and provide only the letter as your response. Question:</blockquote>
+            <p>Only the correct single-letter answer receives credit. Any non-conforming response is counted as incorrect. This strict protocol measures performance under a shared output constraint; transcription tasks are evaluated through candidate selection rather than unrestricted sequence generation.</p>
+
+            <h3 id="seed-instantiation">S2.2. Seed-controlled instantiation</h3>
+            <p>A random seed and configurable item counts instantiate an evaluation set. Researchers can change seeds or increase item counts to investigate performance anomalies or suspected overfitting. The default experiment uses the configuration described below. Seed control differs by component:</p>
+            <ul>
+                <li><strong>Real-world analysis:</strong> the query work and distractors are sampled from the same sub-corpus. Distractors are valid labels within that context, reducing label-set exclusion shortcuts <a href="#ref-listening" aria-label="Reference 10">[10]</a>.</li>
+                <li><strong>Fundamental perception:</strong> all musical materials and candidate options are generated algorithmically. The pipeline first creates four equally valid candidates, then randomly selects the target. The other candidates are incorrect only relative to the stimulus.</li>
+                <li><strong>Theoretical knowledge:</strong> the 119 stems and their correct answers and distractors remain fixed. The seed changes the presentation order of the four options, preventing reliance on stable answer positions, not memorization of question content.</li>
+            </ul>
+
+            <h4 id="random-chain">Three-dimensional random chain</h4>
+            <p>To ensure that the benchmark system can be controlled by the user-specified random seed, we have also developed a comprehensive set of random selection and random number generation tools. We adopt the <strong>"Three-dimensional random chain"</strong> method to generate a local random number matrix for all sub-questions, thereby constraining the content of each sub-question and the generation process of its associated music.</p>
+            <p>The usage of this function is as follows:</p>
+            <pre class="seed-code" tabindex="0" aria-label="Three-dimensional random chain usage"><code>seeds_chain_dict, Seed_Chain_Matrix = pseudorandom_tools.generate_3d_random_chain(input_seed, [number_of_questions_type, number_of_each_questions, num_process])</code></pre>
+            <p>Here, the matrix <strong><code>Seed_Chain_Matrix</code></strong> represents the local random number for the k-th category, l-th sub-question, and p-th process (batch). Given an input seed (e.g., 0), the random number at the specific position remains fixed regardless of how the total number of categories, sub-questions, and processes changes, as shown in the figure:</p>
+            <figure class="chain-figure">
+                <img src="Three-dimensional random chain.png" class="chain-image" alt="Three-dimensional random chain" loading="lazy">
+                <figcaption class="image-caption">As shown in the figure, although the scale of the Benchmark varies, the local random number for the 1-th category, 1st sub-question, and 2nd process (batch) remains the same when the input seed 0 is a fixed value — it is the integer 112.</figcaption>
+            </figure>
+        </section>
+
+        <section id="radar-values" class="supplement-section" aria-labelledby="radar-title">
+            <h2 id="radar-title">S3. Complete Radar Values</h2>
+            <p><a href="#tab-corevalues">Table S1</a> and <a href="#tab-realvalues">Table S2</a> preserve all values plotted in the two original radar figures. The main paper redraws those curves with compact axis labels and places dense numerical annotations here instead of superimposing them on intersecting curves. Axis order is unchanged. Human percentages retain the one-decimal values encoded in the original curves; model accuracies are integer percentages. Reported aggregate means and standard deviations remain unchanged in the main figures, including their original rounding.</p>
+            <p>On smaller screens, scroll each table horizontally to view all columns.</p>
+
+            <div class="table-scroll" role="region" aria-labelledby="core-table-caption" tabindex="0">
+                <table id="tab-corevalues" class="results-table">
+                    <caption id="core-table-caption"><strong>Table S1.</strong> All original core-skill radar values (%). A: audio; S: score; T: text. Am., St., Ex.: human amateurs, students, experts. GPT: GPT-4o-Audio; Kimi: Kimi-Audio-7B-Instruct; MiD: MiDashengLM-7B; MF: Music-Flamingo; Qwen: Qwen3.5-Omni-Plus; Gemini: Gemini-3.1-Pro.</caption>
+                    <thead>
+                        <tr><th scope="col">Task</th><th scope="col">Am.</th><th scope="col">St.</th><th scope="col">Ex.</th><th scope="col">GPT</th><th scope="col">Kimi</th><th scope="col">MiD</th><th scope="col">MF</th><th scope="col">Qwen</th><th scope="col">Gemini</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Pitch (A)</th><td>66.7</td><td>71.4</td><td>100.0</td><td>30</td><td>22</td><td>24</td><td>28</td><td>96</td><td>99</td></tr>
+                        <tr><th scope="row">Interval (A)</th><td>58.3</td><td>71.4</td><td>90.5</td><td>29</td><td>22</td><td>22</td><td>20</td><td>33</td><td>51</td></tr>
+                        <tr><th scope="row">Chord (A)</th><td>50.0</td><td>57.1</td><td>71.4</td><td>21</td><td>19</td><td>15</td><td>38</td><td>47</td><td>44</td></tr>
+                        <tr><th scope="row">Tonality (A)</th><td>70.8</td><td>85.7</td><td>95.2</td><td>28</td><td>25</td><td>31</td><td>30</td><td>67</td><td>87</td></tr>
+                        <tr><th scope="row">Rhythm (A)</th><td>50.0</td><td>57.1</td><td>90.5</td><td>8</td><td>36</td><td>36</td><td>29</td><td>34</td><td>34</td></tr>
+                        <tr><th scope="row">Meter (A)</th><td>37.5</td><td>57.1</td><td>66.7</td><td>23</td><td>21</td><td>20</td><td>26</td><td>27</td><td>25</td></tr>
+                        <tr><th scope="row">Melody (A)</th><td>29.2</td><td>42.9</td><td>95.2</td><td>29</td><td>17</td><td>26</td><td>29</td><td>43</td><td>47</td></tr>
+                        <tr><th scope="row">Interval (S)</th><td>87.5</td><td>71.4</td><td>95.2</td><td>36</td><td>32</td><td>25</td><td>29</td><td>81</td><td>100</td></tr>
+                        <tr><th scope="row">Chord (S)</th><td>50.0</td><td>52.4</td><td>95.2</td><td>11</td><td>32</td><td>22</td><td>34</td><td>78</td><td>100</td></tr>
+                        <tr><th scope="row">Tonality (S)</th><td>58.3</td><td>47.6</td><td>90.5</td><td>24</td><td>32</td><td>50</td><td>39</td><td>93</td><td>100</td></tr>
+                        <tr><th scope="row">Meter (S)</th><td>25.0</td><td>47.6</td><td>90.5</td><td>1</td><td>20</td><td>22</td><td>23</td><td>31</td><td>64</td></tr>
+                        <tr><th scope="row">Music theory (T)</th><td>45.8</td><td>81.0</td><td>71.4</td><td>73</td><td>69</td><td>66</td><td>68</td><td>93</td><td>95</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-scroll" role="region" aria-labelledby="real-table-caption" tabindex="0">
+                <table id="tab-realvalues" class="results-table real-world-table">
+                    <caption id="real-table-caption"><strong>Table S2.</strong> All original real-world radar values (%). Model abbreviations follow <a href="#tab-corevalues">Table S1</a>. A: audio; S: score.</caption>
+                    <thead>
+                        <tr><th scope="col">Task</th><th scope="col">GPT</th><th scope="col">Kimi</th><th scope="col">MiD</th><th scope="col">MF</th><th scope="col">Qwen</th><th scope="col">Gemini</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Genre (A)</th><td>57</td><td>45</td><td>39</td><td>45</td><td>73</td><td>60</td></tr>
+                        <tr><th scope="row">Instrument (A)</th><td>45</td><td>27</td><td>23</td><td>49</td><td>80</td><td>58</td></tr>
+                        <tr><th scope="row">Tempo (A)</th><td>25</td><td>21</td><td>26</td><td>40</td><td>58</td><td>37</td></tr>
+                        <tr><th scope="row">Meter (A)</th><td>13</td><td>17</td><td>36</td><td>46</td><td>59</td><td>54</td></tr>
+                        <tr><th scope="row">Tonality (A)</th><td>25</td><td>17</td><td>18</td><td>45</td><td>44</td><td>50</td></tr>
+                        <tr><th scope="row">Harmonic (A)</th><td>30</td><td>22</td><td>24</td><td>59</td><td>65</td><td>76</td></tr>
+                        <tr><th scope="row">Melody (A)</th><td>21</td><td>20</td><td>26</td><td>24</td><td>40</td><td>29</td></tr>
+                        <tr><th scope="row">Lyric (A)</th><td>97</td><td>88</td><td>27</td><td>94</td><td>100</td><td>99</td></tr>
+                        <tr><th scope="row">Work (A)</th><td>67</td><td>56</td><td>39</td><td>75</td><td>86</td><td>84</td></tr>
+                        <tr><th scope="row">Genre (S)</th><td>26</td><td>19</td><td>30</td><td>25</td><td>26</td><td>52</td></tr>
+                        <tr><th scope="row">Meter (S)</th><td>12</td><td>18</td><td>43</td><td>56</td><td>66</td><td>68</td></tr>
+                        <tr><th scope="row">Tonality (S)</th><td>31</td><td>33</td><td>33</td><td>26</td><td>46</td><td>56</td></tr>
+                        <tr><th scope="row">Work (S)</th><td>39</td><td>18</td><td>28</td><td>18</td><td>38</td><td>52</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="open-source" class="supplement-section" aria-labelledby="open-source-title">
+            <h2 id="open-source-title">Open Source</h2>
+            <p>The folder <a href="online_sys_music_files/"><strong><code>online_sys_music_files</code></strong></a> stores the audio files required by this page. The folder <a href="Code_Fragments/"><strong><code>Code_Fragments</code></strong></a> provides partial code snippets. Should this paper be accepted for publication, all additional resources will be released, such as real-music items. Thank you for your time and attention.</p>
+            <p>Supplementary source: <a href="supplementary_2027.tex"><code>supplementary_2027.tex</code></a>. Bibliography source: <a href="ICASSP2027_refs.bib"><code>ICASSP2027_refs.bib</code></a>. The synthesis and melody-rendering code links are included in <a href="#fundamental-generation">S1.2</a>; the random-chain usage and illustration are included in <a href="#random-chain">S2.2</a>.</p>
+        </section>
+
+        <section id="demo" class="demo-section" aria-labelledby="demo-title">
+            <h2 id="demo-title" class="page-title">Test demonstration for HY-MAST</h2>
+            <p class="quiz-description">
+                Cases For Fundamental Perception and Theoretical Knowledge Evaluation.
+                Below are whole 11 task categories of fundamental perception, as well as the theoretical knowledge task, each category presents 2 items.
+                All the music content and questions are generated based on the random seed "0".
+                This random seed enables question reproduction. Identical seed values produce consistent music and questions, ensuring benchmark fairness and reproducible LLM evaluation outcomes.
+            </p>
+            <div id="quiz"></div>
+        </section>
+
+        <section id="references" class="supplement-section" aria-labelledby="references-title">
+            <h2 id="references-title">References</h2>
+            <ol class="references-list">
+                <li id="ref-musicnet" data-bib-key="DBLP:conf/iclr/ThickstunHK17">J. Thickstun, Z. Harchaoui, and S. M. Kakade, “Learning features of music from scratch,” in <em>Proc. ICLR</em>, 2017.</li>
+                <li id="ref-compmusic" data-bib-key="DBLP:conf/ismir/Serra11">X. Serra, “A multicultural approach in music information research,” in <em>Proc. ISMIR</em>, pp. 151–156, 2011.</li>
+                <li id="ref-arab-andalusian" data-bib-key="DBLP:conf/dlfm/RepettoPCBS18">R. Caro Repetto, N. Pretto, A. Chaachoo, B. Bozkurt, and X. Serra, “An open corpus for the computational research of Arab-Andalusian music,” in <em>Proc. DLfM</em>, pp. 78–86, 2018.</li>
+                <li id="ref-jingju" data-bib-key="DBLP:conf/ismir/GongRS17">R. Gong, R. Caro Repetto, and X. Serra, “Creating an a cappella singing audio dataset for automatic Jingju singing evaluation research,” in <em>Proc. DLfM</em>, pp. 37–40, 2017.</li>
+                <li id="ref-saraga" data-bib-key="srinivasamurthy2021saraga">A. Srinivasamurthy, S. Gulati, R. Caro Repetto, and X. Serra, “Saraga: Open datasets for research on Indian art music,” <em>Empirical Musicology Review</em>, vol. 16, no. 1, pp. 85–98, 2021.</li>
+                <li id="ref-turkish" data-bib-key="dzhambazov2014automatic">G. B. Dzhambazov, S. Sentürk, and X. Serra, “Automatic lyrics-to-audio alignment in classical Turkish music,” Computer Engineering Department, Bogaziçi University, 2014.</li>
+                <li id="ref-tunesformer" data-bib-key="DBLP:conf/hcmir/WuLY023">S. Wu, X. Li, F. Yu, and M. Sun, “TunesFormer: Forming Irish tunes with control codes by bar patching,” in <em>Proc. HCMIR</em>, 2023.</li>
+                <li id="ref-open-music-theory" data-bib-key="openmusictheory2021">M. Gotham, K. Gullings, C. Hamm, et al., “Open Music Theory, version 2,” Online open-access textbook, 2021. <a href="https://viva.pressbooks.pub/openmusictheorycopy/">https://viva.pressbooks.pub/openmusictheorycopy/</a>.</li>
+                <li id="ref-deepseek" data-bib-key="DBLP:journals/corr/abs-2501-12948">D. Guo, D. Yang, H. Zhang, et al., “DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning,” <em>Nature</em>, vol. 645, no. 8081, pp. 633–638, 2025. DOI: <a href="https://doi.org/10.1038/s41586-025-09422-z">10.1038/s41586-025-09422-z</a>. <a href="https://www.nature.com/articles/s41586-025-09422-z">Article</a>.</li>
+                <li id="ref-listening" data-bib-key="DBLP:conf/ismir/ZangOBMN25">Y. Zang, S. O'Brien, T. Berg-Kirkpatrick, J. J. McAuley, and Z. Novack, “Are you really listening? Boosting perceptual awareness in music-QA benchmarks,” in <em>Proc. ISMIR</em>, pp. 247–261, 2025.</li>
+            </ol>
+        </section>
+    </main>
 
 <script>
 const questions = [
